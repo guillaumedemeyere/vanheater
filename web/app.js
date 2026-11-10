@@ -17,7 +17,7 @@ const API = cfg.apiBase || '/api';
 /* ---------------- theme ---------------- */
 const themeSel = $('#theme');
 const setTheme = (t) => { document.documentElement.dataset.theme = t; themeSel.value = t; store.set('theme', t); };
-setTheme(store.get('theme', 'auto'));
+setTheme(store.get('theme', 'auto').replace('dark', 'ember'));   // the old Dark theme is gone: Ember is the dark one
 themeSel.onchange = () => { setTheme(themeSel.value); draw(); };
 
 /* ---------------- update interval ---------------- */
