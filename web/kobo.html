@@ -8,8 +8,8 @@
      Read-only: temperatures and alarm status. Polls with XMLHttpRequest. High contrast with a few deep colours. -->
 <style>
 html,body{margin:0;padding:0;background:#fff;color:#000}
-body{font:500 22px/1.25 Helvetica,Arial,sans-serif;padding:10px}
-.status{border:3px solid #000;border-top-width:12px;padding:6px 12px;margin-bottom:8px}
+body{font:500 20px/1.25 Helvetica,Arial,sans-serif;padding:10px;text-align:center}
+.status{border:3px solid #000;border-top-width:12px;padding:6px 12px;margin-bottom:10px}
 .status.ok{border-color:#00702e}
 .status.warn{border-color:#b35c00}
 .status.alarm{border-color:#c00000}
@@ -17,51 +17,59 @@ body{font:500 22px/1.25 Helvetica,Arial,sans-serif;padding:10px}
 .status.ok .big{color:#00702e}
 .status.warn .big{color:#b35c00}
 .status.alarm .big{color:#c00000}
-.status ul{margin:4px 0 0;padding-left:24px}
-.top{width:100%;border-collapse:separate;border-spacing:0;margin-bottom:8px}
-.top td{border:3px solid #000;border-top:10px solid #b23a00;padding:4px 12px;vertical-align:top;width:50%}
-.top td.t2{border-top-color:#0a2fa8}
-.top .lbl{font-size:19px;color:#222}
-.top .temp{font-size:78px;line-height:1.05;font-weight:700;color:#b23a00}
-.top .t2 .temp{color:#0a2fa8}
-.top .sub{font-size:19px;color:#222}
-table.d{width:100%;border-collapse:collapse;margin-bottom:8px}
-table.d td{border-bottom:2px solid #000;padding:5px 4px}
-table.d td.v{text-align:right;font-weight:700;padding-right:12px}
-table.d td.sep{border-left:2px solid #000}
-.chart{border:3px solid #000;margin-bottom:8px;padding:4px 6px}
-.chart .lbl{font-size:19px;color:#222}
-.log{margin:0 0 8px;padding:0;list-style:none;font-size:19px}
+.status ul{margin:4px 0 0;padding:0;list-style:none;font-size:22px}
+table.g{width:100%;border-collapse:separate;border-spacing:8px;margin:-8px 0 2px;table-layout:fixed}
+table.g td{border:3px solid #000;padding:4px 6px;vertical-align:middle}
+.hero td{border-top-width:10px;padding:6px 6px 8px}
+.hero td.a{border-top-color:#b23a00}
+.hero td.b{border-top-color:#0a2fa8}
+.lbl{font-size:17px;color:#222;text-transform:uppercase;letter-spacing:1px}
+.temp{font-size:84px;line-height:1.05;font-weight:700}
+.hero td.a .temp{color:#b23a00}
+.hero td.b .temp{color:#0a2fa8}
+.sub{font-size:17px;color:#222}
+.tile .val{font-size:30px;font-weight:700;line-height:1.15}
+.tile .u{font-size:17px;font-weight:500}
+.chart{border:3px solid #000;margin:2px 0 10px;padding:6px 4px 4px}
+.tabs{margin:2px 0 6px}
+.tabs button,.tabs select{font:600 18px Helvetica,Arial,sans-serif;border:3px solid #000;background:#fff;color:#000;padding:4px 10px;margin:0 3px}
+.tabs button.on{background:#0a2fa8;border-color:#0a2fa8;color:#fff}
+.log{margin:4px 0 10px;padding:0;list-style:none;font-size:18px}
 .log li{border-bottom:1px solid #000;padding:3px 2px}
-.foot{font-size:19px;color:#222}
-select,button{font:600 19px Helvetica,Arial,sans-serif;border:3px solid #000;background:#fff;color:#000;padding:4px 8px;margin-left:6px}
-button{background:#0a2fa8;color:#fff;border-color:#0a2fa8}
+.foot{font-size:18px;color:#222}
+.foot select,.foot button{font:600 18px Helvetica,Arial,sans-serif;border:3px solid #000;background:#fff;color:#000;padding:4px 8px;margin-left:6px}
+.foot button{background:#0a2fa8;color:#fff;border-color:#0a2fa8}
 </style>
 </head>
 <body>
 <div id="status" class="status warn"><div class="big" id="sbig">Loading...</div><ul id="slist"></ul></div>
-<table class="top"><tr>
-  <td><div class="lbl">Cabin</div><div class="temp" id="temp">--</div><div class="sub" id="tsub">&nbsp;</div></td>
-  <td class="t2"><div class="lbl" id="tlbl">Target</div><div class="temp" id="tgt">--</div><div class="sub" id="gsub">&nbsp;</div></td>
+
+<table class="g hero"><tr>
+  <td class="a"><div class="lbl">Cabin</div><div class="temp" id="temp">--</div><div class="sub" id="tsub">&nbsp;</div></td>
+  <td class="b"><div class="lbl" id="tlbl">Target</div><div class="temp" id="tgt">--</div><div class="sub" id="gsub">&nbsp;</div></td>
 </tr></table>
-<table class="d" id="rows"></table>
-<div class="chart"><div class="lbl" id="l1">Cabin temperature</div><div id="c1"></div></div>
-<div class="chart"><div class="lbl" id="l2">Battery voltage</div><div id="c2"></div></div>
-<div class="chart"><div class="lbl" id="l3">Heater body temperature</div><div id="c3"></div></div>
-<div class="lbl" style="font-size:19px;color:#222">Recent alarm events</div>
+
+<table class="g tile" id="tiles"></table>
+
+<div class="chart">
+  <div class="tabs" id="tabs"></div>
+  <div id="chart"></div>
+  <div class="tabs" id="ranges"></div>
+</div>
+
+<div class="lbl">Recent alarm events</div>
 <ul class="log" id="log"></ul>
 <div class="foot">
   <span id="upd">not updated yet</span><br>
-  Graphs
-  <select id="range"><option value="1h">1 h</option><option value="4h" selected>4 h</option><option value="day">24 h</option><option value="week">7 days</option></select>
   Update every
   <select id="every"><option value="15">15 s</option><option value="30">30 s</option><option value="60">1 min</option><option value="300">5 min</option></select>
   <button id="now" type="button">Now</button>
 </div>
 <script>
 (function () {
-  var timer = null;
-  var cfg = null;
+  var timer = null, cfg = null, hist = null, curSeries = 'cabin', curRange = '4h', lastValues = {};
+  var SERIES = [['cabin', 'Cabin'], ['battery', 'Battery'], ['body', 'Heater body'], ['pump', 'Pump']];
+  var RANGES = [['1h', '1 h'], ['4h', '4 h'], ['day', '24 h'], ['week', '7 days']];
 
   function $(id) { return document.getElementById(id); }
   function get(url, cb) {
@@ -79,17 +87,21 @@ button{background:#0a2fa8;color:#fff;border-color:#0a2fa8}
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
   function pad(n) { return ('0' + n).slice(-2); }
   function hm(ms) { var d = new Date(ms); return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
-  function cell(k, v, sep) { return '<td' + (sep ? ' class="sep"' : '') + '>' + k + '</td><td class="v">' + v + '</td>'; }
-  function pair(a, b) { return '<tr>' + cell(a[0], a[1], false) + cell(b[0], b[1], true) + '</tr>'; }
+  var DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   function since(ms) {
     var s = Math.max(0, Math.round((new Date().getTime() - ms) / 1000));
     if (s < 90) { return s + ' s ago'; }
     if (s < 5400) { return Math.round(s / 60) + ' min ago'; }
     return Math.round(s / 3600) + ' h ago';
   }
+  function tile(label, val, unit) {
+    return '<td><div class="lbl">' + label + '</div><div class="val">' + val + (unit ? ' <span class="u">' + unit + '</span>' : '') + '</div></td>';
+  }
+  function trow(a, b) { return '<tr>' + a + b + '</tr>'; }
 
   function render(state, alarms) {
     var v = (state && state.values) || {};
+    lastValues = v;
     var age = state ? (new Date().getTime() - (state.lastMsg || 0)) / 1000 : 1e9;
     var offline = !state || !state.online || age > 300;
     var active = (alarms && alarms.active) || [];
@@ -109,25 +121,23 @@ button{background:#0a2fa8;color:#fff;border-color:#0a2fa8}
     var c = alarms && alarms.config, r = c && c.rules;
     var hot = r && r.tempHigh && r.tempHigh.enabled ? r.tempHigh.value : null;
     var cold = r && r.tempLow && r.tempLow.enabled ? r.tempLow.value : null;
-    $('temp').innerHTML = num(v.TempCurrent, 1) + '&deg;C';
-    $('tsub').innerHTML = (cold !== null ? 'low ' + cold : 'low off') + ' / ' + (hot !== null ? 'high ' + hot : 'high off') + '&deg;C &middot; ' + (c && c.armed ? 'dog mode ON' : 'dog mode off');
-
+    $('temp').innerHTML = num(v.TempCurrent, 1) + '&deg;';
+    $('tsub').innerHTML = 'alarm below ' + (cold !== null ? cold : 'off') + ' / above ' + (hot !== null ? hot : 'off') + '<br>' + (c && c.armed ? 'dog mode ON' : 'dog mode off');
     var hz = (v.Thermostat === 0);
     $('tlbl').innerHTML = hz ? 'Pump demand' : 'Target';
-    $('tgt').innerHTML = hz ? num(v.TempDesired, 0) : num(v.TempDesired, 1) + '&deg;C';
-    $('gsub').innerHTML = esc(v.ThermostatMode || '') + (hz ? ' &middot; ' + num(v.PumpFixed, 1) + ' Hz' : '');
+    $('tgt').innerHTML = hz ? num(v.TempDesired, 0) : num(v.TempDesired, 1) + '&deg;';
+    $('gsub').innerHTML = esc(v.ThermostatMode || '&nbsp;') + (hz ? '<br>' + num(v.PumpFixed, 1) + ' Hz' : '<br>&nbsp;');
 
     var run = esc((v.RunString || '--').replace(/^\s+|\s+$/g, ''));
-    $('rows').innerHTML =
-      pair(['Heater', run], ['Error', esc(v.ErrorString || '--')]) +
-      pair(['Battery', num(v.InputVoltage, 1) + ' V'], ['Heater body', num(v.TempBody, 0) + '&deg;C']) +
-      pair(['Pump now', num(v.PumpActual, 1) + ' Hz'], ['Pump set', num(v.PumpFixed, 1) + ' Hz']) +
-      pair(['Fan', num(v.FanRPM, 0) + ' rpm'], ['Fuel rate', num(v.FuelRate, 0) + ' mL/h']) +
-      pair(['Humidity', num(v.Humidity, 0) + ' %'], ['Pressure', num(v.Pressure, 0) + ' hPa']) +
-      pair(['Fuel used', typeof v.FuelUsage === 'number' ? (v.FuelUsage / 1000).toFixed(2) + ' L' : '--'],
-           ['Fuel total', typeof v.TotalFuelUsage === 'number' ? (v.TotalFuelUsage / 1000).toFixed(1) + ' L' : '--']) +
-      pair(['Sensor 1', num(v.Temp1Current, 1) + '&deg;C'], ['Sensor 4', num(v.Temp4Current, 1) + '&deg;C']) +
-      pair(['Last data', state ? since(state.lastMsg || 0) : '--'], ['Notified phones', alarms && alarms.push ? alarms.push.subscribers : '--']);
+    $('tiles').innerHTML =
+      trow(tile('Heater', run), tile('Error', esc(v.ErrorString || '--'))) +
+      trow(tile('Battery', num(v.InputVoltage, 1), 'V'), tile('Heater body', num(v.TempBody, 0), '&deg;C')) +
+      trow(tile('Pump now', num(v.PumpActual, 1), 'Hz'), tile('Pump set', num(v.PumpFixed, 1), 'Hz')) +
+      trow(tile('Fan', num(v.FanRPM, 0), 'rpm'), tile('Fuel rate', num(v.FuelRate, 0), 'mL/h')) +
+      trow(tile('Humidity', num(v.Humidity, 0), '%'), tile('Pressure', num(v.Pressure, 0), 'hPa')) +
+      trow(tile('Fuel used', typeof v.FuelUsage === 'number' ? (v.FuelUsage / 1000).toFixed(2) : '--', 'L'),
+           tile('Fuel total', typeof v.TotalFuelUsage === 'number' ? (v.TotalFuelUsage / 1000).toFixed(1) : '--', 'L')) +
+      trow(tile('Last data', state ? since(state.lastMsg || 0) : '--'), tile('Alert phones', alarms && alarms.push ? alarms.push.subscribers : '--'));
 
     var log = (alarms && alarms.log) || [], out = '';
     for (i = 0; i < log.length && i < 5; i++) {
@@ -136,71 +146,144 @@ button{background:#0a2fa8;color:#fff;border-color:#0a2fa8}
     $('log').innerHTML = out || '<li>none</li>';
     var d = new Date();
     $('upd').innerHTML = 'Updated ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    draw();
   }
 
-  function chart(el, h, key, color, lines, dec) {
-    var pts = h && h.series && h.series[key];
-    if (!pts || pts.length < 2) { el.innerHTML = '<div class="foot">No history yet</div>'; return; }
-    var W = Math.max(300, el.clientWidth || 680), H = 150, L = 44, i, lo = 1e9, hi = -1e9;
-    for (i = 0; i < pts.length; i++) { if (pts[i][1] < lo) { lo = pts[i][1]; } if (pts[i][1] > hi) { hi = pts[i][1]; } }
-    for (i = 0; i < lines.length; i++) {
-      if (lines[i].v !== null && lines[i].v < hi + 6 && lines[i].v > lo - 6) { lo = Math.min(lo, lines[i].v); hi = Math.max(hi, lines[i].v); }
-    }
-    if (hi - lo < 1) { hi += 0.5; lo -= 0.5; }
-    var t0 = h.from, t1 = h.to;
-    function X(t) { return L + (t - t0) / (t1 - t0) * (W - L - 6); }
-    function Y(c) { return H - 20 - (c - lo) / (hi - lo) * (H - 20 - 8); }
-    var line = '';
-    for (i = 0; i < pts.length; i++) { line += X(pts[i][0]).toFixed(1) + ',' + Y(pts[i][1]).toFixed(1) + ' '; }
-    var svg = '<svg width="' + W + '" height="' + H + '" xmlns="http://www.w3.org/2000/svg">' +
-      '<rect x="' + L + '" y="8" width="' + (W - L - 6) + '" height="' + (H - 28) + '" fill="none" stroke="#000" stroke-width="2"/>';
-    for (i = 0; i < lines.length; i++) {
-      if (lines[i].v !== null && lines[i].v >= lo && lines[i].v <= hi) {
-        svg += '<line x1="' + L + '" x2="' + (W - 6) + '" y1="' + Y(lines[i].v).toFixed(1) + '" y2="' + Y(lines[i].v).toFixed(1) + '" stroke="' + lines[i].c + '" stroke-width="3" stroke-dasharray="10 6"/>';
-      }
-    }
-    svg += '<polyline points="' + line + '" fill="none" stroke="' + color + '" stroke-width="3"/>' +
-      '<text x="2" y="20" font-size="16" fill="#000">' + hi.toFixed(dec) + '</text>' +
-      '<text x="2" y="' + (H - 24) + '" font-size="16" fill="#000">' + lo.toFixed(dec) + '</text>' +
-      '<text x="' + L + '" y="' + (H - 4) + '" font-size="16" fill="#000">' + hm(t0) + '</text>' +
-      '<text x="' + (W - 50) + '" y="' + (H - 4) + '" font-size="16" fill="#000">' + hm(t1) + '</text></svg>';
-    el.innerHTML = svg;
+  function niceStep(span, n) {
+    var raw = span / n, p = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10)), f = raw / p;
+    return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * p;
   }
 
-  function charts(h) {
-    var r = cfg && cfg.rules;
+  function def() {
+    var r = cfg && cfg.rules, hz = (lastValues.Thermostat === 0);
     var hot = r && r.tempHigh && r.tempHigh.enabled ? r.tempHigh.value : null;
     var cold = r && r.tempLow && r.tempLow.enabled ? r.tempLow.value : null;
     var bat = r && r.battery && r.battery.enabled ? r.battery.value : null;
-    chart($('c1'), h, 'TempCurrent', '#b23a00', [{ v: hot, c: '#c00000' }, { v: cold, c: '#0a2fa8' }], 1);
-    chart($('c2'), h, 'InputVoltage', '#00702e', [{ v: bat, c: '#c00000' }], 1);
-    chart($('c3'), h, 'TempBody', '#0a2fa8', [], 0);
+    if (curSeries === 'battery') { return { key: 'InputVoltage', color: '#00702e', unit: 'V', dec: 1, lines: [{ v: bat, c: '#c00000', t: 'low' }] }; }
+    if (curSeries === 'body') { return { key: 'TempBody', color: '#b23a00', unit: '°C', dec: 0, lines: [] }; }
+    if (curSeries === 'pump') { return { key: 'PumpActual', color: '#0a2fa8', unit: 'Hz', dec: 1, lines: [], also: 'PumpFixed', alsoColor: '#b23a00' }; }
+    return { key: 'TempCurrent', color: '#b23a00', unit: '°C', dec: 1, lines: [{ v: hot, c: '#c00000', t: 'hot' }, { v: cold, c: '#0a2fa8', t: 'cold' }],
+             also: hz ? null : 'TempDesired', alsoColor: '#0a2fa8' };
   }
+
+  function draw() {
+    var el = $('chart');
+    if (!hist || !hist.series) { el.innerHTML = '<div class="sub">Loading graph...</div>'; return; }
+    var d = def(), pts = hist.series[d.key], i, j;
+    if (!pts || pts.length < 2) { el.innerHTML = '<div class="sub">No history yet</div>'; return; }
+    var extra = d.also ? hist.series[d.also] : null;
+    var W = Math.max(320, (el.clientWidth || 680)), H = 330, L = 58, R = 14, T = 14, B = 34;
+    var lo = 1e9, hi = -1e9, v;
+    for (i = 0; i < pts.length; i++) { v = pts[i][1]; if (v < lo) { lo = v; } if (v > hi) { hi = v; } }
+    if (extra) { for (i = 0; i < extra.length; i++) { v = extra[i][1]; if (v < lo) { lo = v; } if (v > hi) { hi = v; } } }
+    for (i = 0; i < d.lines.length; i++) {
+      v = d.lines[i].v;
+      if (v !== null && v < hi + 8 && v > lo - 8) { if (v < lo) { lo = v; } if (v > hi) { hi = v; } }
+    }
+    var step = niceStep(Math.max(hi - lo, 1), 4);
+    lo = Math.floor(lo / step) * step; hi = Math.ceil(hi / step) * step;
+    if (hi === lo) { hi = lo + step; }
+    var t0 = hist.from, t1 = hist.to;
+    function X(t) { return L + (t - t0) / (t1 - t0) * (W - L - R); }
+    function Y(c) { return T + (hi - c) / (hi - lo) * (H - T - B); }
+    var svg = '<svg width="' + W + '" height="' + H + '" xmlns="http://www.w3.org/2000/svg">';
+    // horizontal grid + labels
+    for (v = lo; v <= hi + step / 2; v += step) {
+      svg += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v).toFixed(1) + '" y2="' + Y(v).toFixed(1) + '" stroke="#999" stroke-width="1"/>' +
+             '<text x="' + (L - 8) + '" y="' + (Y(v) + 6).toFixed(1) + '" font-size="18" text-anchor="end" fill="#000">' + v.toFixed(step < 1 ? 1 : 0) + '</text>';
+    }
+    // vertical grid + time labels
+    var tick = curRange === '1h' ? 900000 : curRange === '4h' ? 3600000 : curRange === 'day' ? 6 * 3600000 : 86400000;
+    var first = Math.ceil(t0 / tick) * tick, tx;
+    if (curRange === 'day' || curRange === 'week') { var dd = new Date(first); dd.setHours(0, 0, 0, 0); first = dd.getTime(); while (first < t0) { first += tick; } }
+    for (tx = first; tx <= t1; tx += tick) {
+      var xx = X(tx);
+      svg += '<line x1="' + xx.toFixed(1) + '" x2="' + xx.toFixed(1) + '" y1="' + T + '" y2="' + (H - B) + '" stroke="#999" stroke-width="1"/>' +
+             '<text x="' + xx.toFixed(1) + '" y="' + (H - 10) + '" font-size="18" text-anchor="middle" fill="#000">' + (curRange === 'week' ? DAYS[new Date(tx).getDay()] : hm(tx)) + '</text>';
+    }
+    svg += '<rect x="' + L + '" y="' + T + '" width="' + (W - L - R) + '" height="' + (H - T - B) + '" fill="none" stroke="#000" stroke-width="2"/>';
+    // alarm limits
+    for (i = 0; i < d.lines.length; i++) {
+      v = d.lines[i].v;
+      if (v !== null && v >= lo && v <= hi) {
+        svg += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v).toFixed(1) + '" y2="' + Y(v).toFixed(1) + '" stroke="' + d.lines[i].c + '" stroke-width="3" stroke-dasharray="12 7"/>' +
+               '<text x="' + (W - R - 6) + '" y="' + (Y(v) - 6).toFixed(1) + '" font-size="17" font-weight="700" text-anchor="end" fill="' + d.lines[i].c + '">' + d.lines[i].t + ' ' + v + '</text>';
+      }
+    }
+    // secondary line (target / pump set), stepped
+    if (extra && extra.length) {
+      var ln = '';
+      for (j = 0; j < extra.length; j++) {
+        if (j > 0) { ln += X(extra[j][0]).toFixed(1) + ',' + Y(extra[j - 1][1]).toFixed(1) + ' '; }
+        ln += X(extra[j][0]).toFixed(1) + ',' + Y(extra[j][1]).toFixed(1) + ' ';
+      }
+      svg += '<polyline points="' + ln + '" fill="none" stroke="' + d.alsoColor + '" stroke-width="3" stroke-dasharray="3 5"/>';
+    }
+    // main line
+    var line = '', minI = 0, maxI = 0;
+    for (i = 0; i < pts.length; i++) {
+      line += X(pts[i][0]).toFixed(1) + ',' + Y(pts[i][1]).toFixed(1) + ' ';
+      if (pts[i][1] < pts[minI][1]) { minI = i; }
+      if (pts[i][1] > pts[maxI][1]) { maxI = i; }
+    }
+    svg += '<polyline points="' + line + '" fill="none" stroke="' + d.color + '" stroke-width="4" stroke-linejoin="round"/>';
+    // min / max / now markers
+    function mark(idx, label, above) {
+      var mx = X(pts[idx][0]), my = Y(pts[idx][1]);
+      mx = Math.min(Math.max(mx, L + 30), W - R - 30);
+      return '<circle cx="' + X(pts[idx][0]).toFixed(1) + '" cy="' + my.toFixed(1) + '" r="5" fill="#fff" stroke="#000" stroke-width="3"/>' +
+             '<text x="' + mx.toFixed(1) + '" y="' + (my + (above ? -12 : 24)).toFixed(1) + '" font-size="18" font-weight="700" text-anchor="middle" fill="#000">' + label + '</text>';
+    }
+    svg += mark(maxI, 'max ' + pts[maxI][1].toFixed(d.dec), true) + mark(minI, 'min ' + pts[minI][1].toFixed(d.dec), false);
+    var last = pts[pts.length - 1];
+    svg += '<circle cx="' + X(last[0]).toFixed(1) + '" cy="' + Y(last[1]).toFixed(1) + '" r="7" fill="' + d.color + '" stroke="#000" stroke-width="2"/>';
+    svg += '</svg>';
+    el.innerHTML = svg;
+  }
+
+  function buttons(id, list, cur, fn) {
+    var out = '', i;
+    for (i = 0; i < list.length; i++) {
+      out += '<button type="button" data-k="' + list[i][0] + '"' + (list[i][0] === cur ? ' class="on"' : '') + '>' + list[i][1] + '</button>';
+    }
+    var box = $(id);
+    box.innerHTML = out;
+    var bs = box.getElementsByTagName('button');
+    for (i = 0; i < bs.length; i++) {
+      bs[i].onclick = function () { fn(this.getAttribute('data-k')); };
+    }
+  }
+  function tabs() {
+    buttons('tabs', SERIES, curSeries, function (k) { curSeries = k; save(); tabs(); draw(); });
+    buttons('ranges', RANGES, curRange, function (k) { curRange = k; save(); tabs(); loadHist(); });
+  }
+  function save() { try { window.localStorage.setItem('kobo-series', curSeries); window.localStorage.setItem('kobo-range', curRange); } catch (e) {} }
+
+  function loadHist() { get('/api/history?range=' + curRange, function (h) { hist = h; draw(); }); }
 
   function refresh() {
     var state, alarms, left = 2;
     function done() { left--; if (left === 0) { render(state, alarms); } }
     get('/api/state', function (j) { state = j; done(); });
-    get('/api/alarms', function (j) {
-      alarms = j; cfg = j && j.config; done();
-      get('/api/history?range=' + $('range').value, charts);   // after the alarm limits are known
-    });
+    get('/api/alarms', function (j) { alarms = j; cfg = j && j.config; done(); });
+    loadHist();
   }
 
   function schedule() {
     var sec = parseInt($('every').value, 10) || 30;
     if (timer) { clearInterval(timer); }
     timer = setInterval(function () { if (!document.hidden) { refresh(); } }, sec * 1000);
-    try { window.localStorage.setItem('kobo-every', String(sec)); window.localStorage.setItem('kobo-range', $('range').value); } catch (e) {}
+    try { window.localStorage.setItem('kobo-every', String(sec)); } catch (e) {}
   }
 
   try {
     var se = window.localStorage.getItem('kobo-every'); if (se) { $('every').value = se; }
-    var sr = window.localStorage.getItem('kobo-range'); if (sr) { $('range').value = sr; }
+    var ss = window.localStorage.getItem('kobo-series'); if (ss) { curSeries = ss; }
+    var sr = window.localStorage.getItem('kobo-range'); if (sr) { curRange = sr; }
   } catch (e) {}
   $('every').onchange = schedule;
-  $('range').onchange = function () { schedule(); refresh(); };
   $('now').onclick = refresh;
+  tabs();
   schedule();
   refresh();
 })();
