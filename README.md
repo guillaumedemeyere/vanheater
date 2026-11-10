@@ -106,8 +106,8 @@ flowchart LR
 You need Docker, an MQTT broker the heater already publishes to, and the heater's topic prefix (shown on its comms settings page).
 
 ```bash
-git clone https://github.com/guillaumedemeyere/dieselheater.git
-cd dieselheater
+git clone https://github.com/guillaumedemeyere/vanheater.git
+cd vanheater
 cp .env.example .env          # fill in MQTT_HOST, MQTT_PORT, MQTT_TLS and MQTT_TOPIC_PREFIX
 ./tools/set-password.sh       # sets the admin password (only a hash is stored)
 docker compose up -d --build
