@@ -39,7 +39,7 @@ It talks to the heater over the same MQTT topics the stock page uses, so the ori
   - **History**: a large, touch-readable chart with min/average/max.
 - **Fixed Hz aware**: in Fixed Hz mode the target is a pump demand, not a temperature. The portal shows the *demanded* Hz next to the *actual* pump Hz and flags when they differ.
 - **7 days of history** (1 h / 4 h / day / week) for cabin and target temperature, battery, heater body and pump rate.
-- **Six themes**: Auto, Ember, AMOLED, Light, E-Ink and E-Ink Colour.
+- **Six themes**: Auto, Ember (Dark), AMOLED, Light, E-Ink and E-Ink Colour.
 - **Adjustable update interval**: live stream, or poll every 5 s to 5 min to save battery on e-ink and other fixed displays. Updates pause while the page is hidden.
 
 <p align="center">
