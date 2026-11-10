@@ -21,7 +21,7 @@ setTheme(store.get('theme', 'auto'));
 themeSel.onchange = () => { setTheme(themeSel.value); draw(); };
 
 /* ---------------- update interval ---------------- */
-let pollMs = Number(store.get('poll', store.get('theme', 'auto') === 'eink' ? '30000' : '0'));   // e-ink defaults to 30 s unless chosen
+let pollMs = Number(store.get('poll', ['eink','einkc'].includes(store.get('theme', 'auto')) ? '30000' : '0'));   // e-ink defaults to 30 s unless chosen
 if (!Number.isFinite(pollMs) || pollMs < 0) pollMs = 0;
 D.pollMs = pollMs;
 const pollSel = $('#poll');

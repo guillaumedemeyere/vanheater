@@ -39,7 +39,7 @@ It talks to the heater over the same MQTT topics the stock page uses, so the ori
   - **History**: a large, touch-readable chart with min/average/max.
 - **Fixed Hz aware**: in Fixed Hz mode the target is a pump demand, not a temperature. The portal shows the *demanded* Hz next to the *actual* pump Hz and flags when they differ.
 - **7 days of history** (1 h / 4 h / day / week) for cabin and target temperature, battery, heater body and pump rate.
-- **Six themes**: Auto, Ember, Dark, AMOLED, Light and E-Ink.
+- **Seven themes**: Auto, Ember, Dark, AMOLED, Light, E-Ink and E-Ink Colour.
 - **Adjustable update interval**: live stream, or poll every 5 s to 5 min to save battery on e-ink and other fixed displays. Updates pause while the page is hidden.
 
 <p align="center">
@@ -78,7 +78,7 @@ It talks to the heater over the same MQTT topics the stock page uses, so the ori
 </p>
 
 ### Built for fixed displays
-The **E-Ink** theme is pure black on white with no colour, no animation and no shadows, with heavy outlines and larger type. Alarm states are shown as inverted black banners and grey tones instead of colour.
+The **E-Ink** theme is pure black on white with no colour, no animation and no shadows, with heavy outlines and larger type. Alarm states are shown as inverted black banners and grey tones. **E-Ink Colour** keeps that layout and adds a few deep, saturated colours (green, amber, red, blue) for colour e-paper screens.
 
 <p align="center">
 <img src="docs/screenshots/theme-eink.jpg" alt="E-Ink theme" width="250">
@@ -172,7 +172,7 @@ LICENSE        MIT
 
 ## Status
 
-Built and checked against a real heater: the dashboard, all four layouts and six themes, history, alarms with push, login, the setpoint (including Fixed Hz), and the advanced settings page.
+Built and checked against a real heater: the dashboard, all four layouts and seven themes, history, alarms with push, login, the setpoint (including Fixed Hz), and the advanced settings page.
 
 Built but not yet tested against a real heater: Start/Stop, the thermostat modes other than the current one, and cyclic mode.
 

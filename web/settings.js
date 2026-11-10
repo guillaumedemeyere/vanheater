@@ -6,7 +6,7 @@ const api = async (path, method = 'GET', body) => {
   return j;
 };
 const theme = (() => { try { return localStorage.getItem('theme'); } catch { return null; } })();
-document.documentElement.dataset.theme = ({ amoled: 'dark', eink: 'light' })[theme] || theme || 'auto';   // this page only has the basic palettes
+document.documentElement.dataset.theme = ({ amoled: 'dark', eink: 'light', einkc: 'light' })[theme] || theme || 'auto';   // this page only has the basic palettes
 
 const hhmm = (m) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 const onoff = (v) => (v ? 'on' : 'off');

@@ -146,22 +146,32 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
 :root[data-theme="amoled"] .card,:root[data-theme="amoled"] .status{box-shadow:none}
 
 /* ---- E-Ink: black on white, no colour, no animation, heavy outlines, larger type (for fixed e-paper displays) ---- */
-:root[data-theme="eink"]{--bg:#fff;--bg2:#fff;--card:#fff;--line:#000;--text:#000;--muted:#2b2b2b;--ember:#000;--temp:#000;--target:#000;
+:root:is([data-theme="eink"],[data-theme="einkc"]){--bg:#fff;--bg2:#fff;--card:#fff;--line:#000;--text:#000;--muted:#2b2b2b;--ember:#000;--temp:#000;--target:#000;
   --ok:#c4c4c4;--warn:#7a7a7a;--bad:#000;--shadow:none;--radius:8px}
-:root[data-theme="eink"] *{transition:none !important;animation:none !important;backdrop-filter:none !important;text-shadow:none !important}
-:root[data-theme="eink"] body{background:#fff;font-size:18px;font-weight:500}
-:root[data-theme="eink"] .card,:root[data-theme="eink"] .status{border:2px solid #000;box-shadow:none}
-:root[data-theme="eink"] .status.alarm{border:4px solid #000;background:#fff}
-:root[data-theme="eink"] .status.warn{border-top-width:8px}
-:root[data-theme="eink"] .hero{border-top:8px solid #000}
-:root[data-theme="eink"] .nav{background:#fff;border-color:#000;border-width:2px}
-:root[data-theme="eink"] .nav button{color:#000;font-weight:600}
-:root[data-theme="eink"] .nav button.on{background:#000;color:#fff}
-:root[data-theme="eink"] .btn,:root[data-theme="eink"] .pill,:root[data-theme="eink"] select,:root[data-theme="eink"] .seg{border:2px solid #000}
-:root[data-theme="eink"] .seg button.on,:root[data-theme="eink"] .btn.primary,:root[data-theme="eink"] .btn.p,:root[data-theme="eink"] .pill.acc,:root[data-theme="eink"] .pill.on,:root[data-theme="eink"] .chip{background:#000;color:#fff;border-color:#000}
-:root[data-theme="eink"] .banner,:root[data-theme="eink"] .act{background:#000;color:#fff;border:2px solid #000}
-:root[data-theme="eink"] .rangebar .mark{background:#000;box-shadow:0 0 0 3px #fff}
-:root[data-theme="eink"] .pill.ok,:root[data-theme="eink"] .pill.bad{color:#000}
-:root[data-theme="eink"] svg text{fill:#000;font-size:11px}
-:root[data-theme="eink"] .lbl,:root[data-theme="eink"] .sub,:root[data-theme="eink"] .hint{color:#2b2b2b}
+:root:is([data-theme="eink"],[data-theme="einkc"]) *{transition:none !important;animation:none !important;backdrop-filter:none !important;text-shadow:none !important}
+:root:is([data-theme="eink"],[data-theme="einkc"]) body{background:#fff;font-size:18px;font-weight:500}
+:root:is([data-theme="eink"],[data-theme="einkc"]) .card,:root:is([data-theme="eink"],[data-theme="einkc"]) .status{border:2px solid #000;box-shadow:none}
+:root:is([data-theme="eink"],[data-theme="einkc"]) .status.alarm{border:4px solid #000;background:#fff}
+:root:is([data-theme="eink"],[data-theme="einkc"]) .status.warn{border-top-width:8px}
+:root:is([data-theme="eink"],[data-theme="einkc"]) .hero{border-top:8px solid #000}
+:root:is([data-theme="eink"],[data-theme="einkc"]) .nav{background:#fff;border-color:#000;border-width:2px}
+:root:is([data-theme="eink"],[data-theme="einkc"]) .nav button{color:#000;font-weight:600}
+:root:is([data-theme="eink"],[data-theme="einkc"]) .nav button.on{background:#000;color:#fff}
+:root:is([data-theme="eink"],[data-theme="einkc"]) .btn,:root:is([data-theme="eink"],[data-theme="einkc"]) .pill,:root:is([data-theme="eink"],[data-theme="einkc"]) select,:root:is([data-theme="eink"],[data-theme="einkc"]) .seg{border:2px solid #000}
+:root:is([data-theme="eink"],[data-theme="einkc"]) .seg button.on,:root:is([data-theme="eink"],[data-theme="einkc"]) .btn.primary,:root:is([data-theme="eink"],[data-theme="einkc"]) .btn.p,:root:is([data-theme="eink"],[data-theme="einkc"]) .pill.acc,:root:is([data-theme="eink"],[data-theme="einkc"]) .pill.on,:root:is([data-theme="eink"],[data-theme="einkc"]) .chip{background:#000;color:#fff;border-color:#000}
+:root:is([data-theme="eink"],[data-theme="einkc"]) .banner,:root:is([data-theme="eink"],[data-theme="einkc"]) .act{background:#000;color:#fff;border:2px solid #000}
+:root:is([data-theme="eink"],[data-theme="einkc"]) .rangebar .mark{background:#000;box-shadow:0 0 0 3px #fff}
+:root:is([data-theme="eink"],[data-theme="einkc"]) .pill.ok,:root:is([data-theme="eink"],[data-theme="einkc"]) .pill.bad{color:#000}
+:root:is([data-theme="eink"],[data-theme="einkc"]) svg text{fill:#000;font-size:11px}
+:root:is([data-theme="eink"],[data-theme="einkc"]) .lbl,:root:is([data-theme="eink"],[data-theme="einkc"]) .sub,:root:is([data-theme="eink"],[data-theme="einkc"]) .hint{color:#2b2b2b}
+/* ---- E-Ink Colour: same flat, heavy-outline layout, plus a few deep saturated colours (colour e-paper is dim, so only dark, strong hues) ---- */
+:root[data-theme="einkc"]{--ember:#b23a00;--temp:#b23a00;--target:#0a2fa8;--ok:#00702e;--warn:#b35c00;--bad:#c00000;--accent:#0a2fa8}
+:root[data-theme="einkc"] .status{border-top-width:10px}
+:root[data-theme="einkc"] .status.alarm{border:4px solid var(--bad);border-top-width:10px;background:#fff}
+:root[data-theme="einkc"] .hero{border-top-color:var(--temp)}
+:root[data-theme="einkc"] .nav button.on,:root[data-theme="einkc"] .seg button.on,:root[data-theme="einkc"] .btn.primary,:root[data-theme="einkc"] .btn.p,:root[data-theme="einkc"] .pill.acc,:root[data-theme="einkc"] .chip{background:var(--target);border-color:var(--target);color:#fff}
+:root[data-theme="einkc"] .pill.on,:root[data-theme="einkc"] .banner,:root[data-theme="einkc"] .act{background:var(--bad);border-color:var(--bad);color:#fff}
+:root[data-theme="einkc"] .pill.ok{color:var(--ok);font-weight:700}
+:root[data-theme="einkc"] .pill.bad{color:var(--bad);font-weight:700}
+:root[data-theme="einkc"] .rangebar .mark{background:var(--temp)}
 :root[data-theme] .fold [data-slot] .card{border:0;box-shadow:none;background:none}
