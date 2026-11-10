@@ -78,6 +78,8 @@ It talks to the heater over the same MQTT topics the stock page uses, so the ori
 </p>
 
 ### Built for fixed displays
+Old e-reader browsers (tested on a Kobo) cannot run the main app, so a plain, read-only page for them lives at `/kobo.html`: cabin temperature, alarm status and a 4-hour chart, with no modern JavaScript or CSS needed. `/device.html` is the diagnostic page used to find out what a browser supports.
+
 The **E-Ink** theme is pure black on white with no colour, no animation and no shadows, with heavy outlines and larger type. Alarm states are shown as inverted black banners and grey tones. **E-Ink Colour** keeps that layout and adds a few deep, saturated colours (green, amber, red, blue) for colour e-paper screens.
 
 <p align="center">
@@ -176,7 +178,7 @@ Built and checked against a real heater: the dashboard, all four layouts and six
 
 Built but not yet tested against a real heater: Start/Stop, the thermostat modes other than the current one, and cyclic mode.
 
-Not built yet: editing frost mode, timers and start settings; support for the heater's MQTT PIN; a dedicated page for old e-ink browsers.
+Not built yet: editing frost mode, timers and start settings; support for the heater's MQTT PIN. Controls on the e-reader page.
 
 ## Contributing
 

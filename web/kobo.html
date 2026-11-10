@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Van Heater (e-reader)</title>
+<!-- Plain ES5 page for old e-reader browsers (Kobo): no modules, no fetch, no Promise, no CSS variables, no grid/flex.
+     Read-only: temperatures and alarm status. Polls with XMLHttpRequest. High contrast with a few deep colours. -->
+<style>
+html,body{margin:0;padding:0;background:#fff;color:#000}
+body{font:500 26px/1.3 Helvetica,Arial,sans-serif;padding:14px}
+h1{font-size:26px;margin:0 0 10px;font-weight:700}
+.status{border:4px solid #000;border-top-width:16px;padding:14px 16px;margin-bottom:14px}
+.status.ok{border-color:#00702e}
+.status.warn{border-color:#b35c00}
+.status.alarm{border-color:#c00000}
+.status .big{font-size:44px;font-weight:700}
+.status.ok .big{color:#00702e}
+.status.warn .big{color:#b35c00}
+.status.alarm .big{color:#c00000}
+.status ul{margin:8px 0 0;padding-left:26px;font-size:26px}
+.hero{border:3px solid #000;border-top:12px solid #b23a00;padding:10px 16px;margin-bottom:14px}
+.hero .temp{font-size:120px;line-height:1.05;font-weight:700;color:#b23a00}
+.hero .lbl{font-size:22px;color:#222}
+table{width:100%;border-collapse:collapse;margin-bottom:14px}
+td{border-bottom:2px solid #000;padding:8px 4px}
+td.v{text-align:right;font-weight:700}
+.chart{border:3px solid #000;margin-bottom:14px;padding:6px}
+.chart svg{display:block;width:100%;height:auto}
+.foot{font-size:20px;color:#222}
+select,button{font:600 22px Helvetica,Arial,sans-serif;border:3px solid #000;background:#fff;color:#000;padding:6px 10px;margin-left:6px}
+button{background:#0a2fa8;color:#fff;border-color:#0a2fa8}
+</style>
+</head>
+<body>
+<h1>Van Heater</h1>
+<div id="status" class="status warn"><div class="big" id="sbig">Loading...</div><ul id="slist"></ul></div>
+<div class="hero"><div class="lbl">Cabin temperature</div><div class="temp" id="temp">--</div></div>
+<table id="rows"></table>
+<div class="chart"><div class="lbl" style="font-size:22px">Cabin, last 4 hours</div><div id="chart"></div></div>
+<div class="foot">
+  <span id="upd">not updated yet</span><br>
+  Update every
+  <select id="every"><option value="15">15 s</option><option value="30">30 s</option><option value="60">1 min</option><option value="300">5 min</option></select>
+  <button id="now" type="button">Now</button>
+</div>
+<script>
+(function () {
+  var timer = null;
+  var cfg = null;
+
+  function $(id) { return document.getElementById(id); }
+  function get(url, cb) {
+    var x = new XMLHttpRequest();
+    x.open('GET', url + (url.indexOf('?') < 0 ? '?' : '&') + '_=' + new Date().getTime(), true);
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4) { return; }
+      var j = null;
+      if (x.status === 200) { try { j = JSON.parse(x.responseText); } catch (e) { j = null; } }
+      cb(j);
+    };
+    x.send();
+  }
+  function num(v, d) { return (typeof v === 'number') ? v.toFixed(d) : '--'; }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function row(k, v) { return '<tr><td>' + k + '</td><td class="v">' + v + '</td></tr>'; }
+
+  function render(state, alarms) {
+    var v = (state && state.values) || {};
+    var age = state ? (new Date().getTime() - (state.lastMsg || 0)) / 1000 : 1e9;
+    var offline = !state || !state.online || age > 300;
+    var active = (alarms && alarms.active) || [];
+    var s = $('status'), list = '', i;
+    if (!state) {
+      s.className = 'status warn'; $('sbig').innerHTML = 'Server not reachable';
+    } else if (active.length) {
+      s.className = 'status alarm'; $('sbig').innerHTML = 'ALARM';
+      for (i = 0; i < active.length; i++) { list += '<li>' + esc(active[i].msg || active[i].rule || 'alarm') + '</li>'; }
+    } else if (offline) {
+      s.className = 'status warn'; $('sbig').innerHTML = 'No data from heater';
+    } else {
+      s.className = 'status ok'; $('sbig').innerHTML = 'All OK';
+    }
+    $('slist').innerHTML = list;
+    $('temp').innerHTML = num(v.TempCurrent, 1) + '&deg;C';
+    var hz = (v.Thermostat === 0);
+    $('rows').innerHTML =
+      row(hz ? 'Pump demand' : 'Target', hz ? num(v.TempDesired, 0) : num(v.TempDesired, 1) + '&deg;C') +
+      row('Heater', esc((v.RunString || '--').replace(/^\s+|\s+$/g, ''))) +
+      row('Battery', num(v.InputVoltage, 1) + ' V') +
+      row('Heater body', num(v.TempBody, 0) + '&deg;C') +
+      row('Humidity', num(v.Humidity, 0) + ' %') +
+      row('Fuel used', typeof v.FuelUsage === 'number' ? (v.FuelUsage / 1000).toFixed(2) + ' L' : '--') +
+      row('Error', esc(v.ErrorString || '--'));
+    var d = new Date();
+    $('upd').innerHTML = 'Updated ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2);
+  }
+
+  function chart(h) {
+    var pts = h && h.series && h.series.TempCurrent;
+    if (!pts || pts.length < 2) { $('chart').innerHTML = '<div class="foot">No history yet</div>'; return; }
+    var W = 700, H = 220, P = 34, i, lo = 1e9, hi = -1e9;
+    var rules = cfg && cfg.rules, hot = rules && rules.tempHigh && rules.tempHigh.enabled ? rules.tempHigh.value : null;
+    var cold = rules && rules.tempLow && rules.tempLow.enabled ? rules.tempLow.value : null;
+    for (i = 0; i < pts.length; i++) { if (pts[i][1] < lo) { lo = pts[i][1]; } if (pts[i][1] > hi) { hi = pts[i][1]; } }
+    if (hot !== null && hot < hi + 6) { hi = Math.max(hi, hot); }
+    if (cold !== null && cold > lo - 6) { lo = Math.min(lo, cold); }
+    lo = Math.floor(lo - 1); hi = Math.ceil(hi + 1);
+    var t0 = h.from, t1 = h.to;
+    function X(t) { return P + (t - t0) / (t1 - t0) * (W - P - 6); }
+    function Y(c) { return H - 22 - (c - lo) / (hi - lo) * (H - 22 - 8); }
+    var line = '';
+    for (i = 0; i < pts.length; i++) { line += X(pts[i][0]).toFixed(1) + ',' + Y(pts[i][1]).toFixed(1) + ' '; }
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">' +
+      '<rect x="' + P + '" y="8" width="' + (W - P - 6) + '" height="' + (H - 30) + '" fill="none" stroke="#000" stroke-width="2"/>';
+    if (hot !== null && hot >= lo && hot <= hi) { svg += '<line x1="' + P + '" x2="' + (W - 6) + '" y1="' + Y(hot) + '" y2="' + Y(hot) + '" stroke="#c00000" stroke-width="3" stroke-dasharray="10 6"/>'; }
+    if (cold !== null && cold >= lo && cold <= hi) { svg += '<line x1="' + P + '" x2="' + (W - 6) + '" y1="' + Y(cold) + '" y2="' + Y(cold) + '" stroke="#0a2fa8" stroke-width="3" stroke-dasharray="10 6"/>'; }
+    svg += '<polyline points="' + line + '" fill="none" stroke="#b23a00" stroke-width="4"/>' +
+      '<text x="2" y="20" font-size="18" fill="#000">' + hi + '</text><text x="2" y="' + (H - 26) + '" font-size="18" fill="#000">' + lo + '</text>' +
+      '<text x="' + P + '" y="' + (H - 4) + '" font-size="18" fill="#000">-4 h</text><text x="' + (W - 50) + '" y="' + (H - 4) + '" font-size="18" fill="#000">now</text></svg>';
+    $('chart').innerHTML = svg;
+  }
+
+  function refresh() {
+    var state, alarms, left = 2;
+    function done() { left--; if (left === 0) { render(state, alarms); } }
+    get('/api/state', function (j) { state = j; done(); });
+    get('/api/alarms', function (j) { alarms = j; cfg = j && j.config; done(); });
+    get('/api/history?range=4h', chart);
+  }
+
+  function schedule() {
+    var sec = parseInt($('every').value, 10) || 30;
+    if (timer) { clearInterval(timer); }
+    timer = setInterval(function () { if (!document.hidden) { refresh(); } }, sec * 1000);
+    try { window.localStorage.setItem('kobo-every', String(sec)); } catch (e) {}
+  }
+
+  try { var saved = window.localStorage.getItem('kobo-every'); if (saved) { $('every').value = saved; } } catch (e) {}
+  $('every').onchange = schedule;
+  $('now').onclick = refresh;
+  schedule();
+  refresh();
+})();
+</script>
+</body>
+</html>
