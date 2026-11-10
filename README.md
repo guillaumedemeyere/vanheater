@@ -136,6 +136,17 @@ For a public address, put it behind a reverse proxy with HTTPS. Web Push needs H
 cd server && npm install && npm test
 ```
 
+## AI assistance
+
+This project was built with the help of an AI coding assistant. The maintainer set the requirements, made the design decisions and tested the result on their own heater. The assistant wrote much of the code and the unit tests.
+
+What that means for you:
+- **It has not been independently audited.** The unit tests cover the alarm rules and the command allow-list only. Most of the rest was checked by hand.
+- **Heater commands deserve extra care.** Start/stop, thermostat modes and cyclic mode have not been tried on a real heater, as listed under [Status](#status). Review `server/src/commands.js` before enabling `COMMANDS_ENABLED`.
+- **Do not use it as your only safety measure** for people, animals or property.
+
+Bug reports and fixes are welcome.
+
 ## Safety and security
 
 - **This controls a fuel-burning heater. Use it at your own risk.** The alarms are an aid, not a replacement for checking on your animals.
