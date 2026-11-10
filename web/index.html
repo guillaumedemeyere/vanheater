@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14110f">
+<title>Van Heater</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon-192.png">
+<link rel="stylesheet" href="app.css?v=11">
+<script>window.__dh = { vals: {}, alarms: null };</script>
+</head>
+<body>
+<div class="app">
+  <nav class="nav" id="nav" aria-label="Views"></nav>
+  <main>
+    <div class="top">
+      <h1 id="title">Van Heater</h1>
+      <div class="chips">
+        <span class="pill" id="armpill" hidden></span>
+        <span class="pill" id="conn">connecting…</span>
+        <a class="pill" href="/settings.html">Advanced</a>
+        <select id="poll" aria-label="Update interval" title="How often this page refreshes"><option value="0">Live</option><option value="5000">5 s</option><option value="15000">15 s</option><option value="30000">30 s</option><option value="60000">1 min</option><option value="300000">5 min</option></select>
+        <select id="theme" aria-label="Theme">
+          <option value="auto">Auto</option><option value="ember">Ember</option><option value="dark">Dark</option><option value="amoled">AMOLED</option><option value="light">Light</option><option value="eink">E-Ink</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="view"></div>
+
+    <!-- Persistent components. app.js moves them into the active view's slots. -->
+    <div id="stash" hidden>
+      <section class="card" id="controls" hidden>
+        <div class="row between"><div class="lbl">Controls</div><span id="dryrun" class="pill" hidden>dry run: nothing is sent</span></div>
+        <div class="setp">
+          <button id="spdn" class="btn round" type="button" aria-label="Lower target">&minus;</button>
+          <div class="spval"><span id="spv">--</span><small id="spu">°C target</small><div id="spmsg" class="hint"></div></div>
+          <button id="spup" class="btn round" type="button" aria-label="Raise target">+</button>
+        </div>
+        <div class="lbl" style="margin-top:14px">Thermostat mode</div>
+        <div class="modes" id="modes"></div>
+        <div class="row gap"><button id="cyclicbtn" class="btn" type="button">Cyclic mode</button></div>
+        <div class="row gap center">
+          <button id="startbtn" class="btn primary" type="button">Start heater</button>
+          <button id="stopbtn" class="btn" type="button">Stop heater</button>
+        </div>
+        <div class="row gap"><button id="fuelreset" class="btn" type="button">Reset &ldquo;Used&rdquo; fuel counter</button><span id="cmdmsg" class="hint"></span></div>
+      </section>
+
+      <section class="card" id="alarms" hidden>
+        <div class="row between"><div class="lbl">Alarms</div><span id="armstate" class="pill">—</span></div>
+        <div id="activelist"></div>
+        <div class="row gap">
+          <button id="armbtn" class="btn primary" type="button">Arm dog mode</button>
+          <button id="pushbtn" class="btn" type="button">Enable notifications</button>
+          <button id="testbtn" class="btn" type="button" hidden>Send test</button>
+        </div>
+        <div id="pushmsg" class="hint"></div>
+        <details id="settings"><summary>Alarm settings</summary>
+          <form id="form" autocomplete="off"></form>
+          <div class="row gap"><button id="savebtn" class="btn primary" type="button" hidden>Save</button><span id="savemsg" class="hint"></span></div>
+        </details>
+        <div id="loginbox" class="row gap" hidden>
+          <input id="pw" type="password" placeholder="Password" autocomplete="current-password">
+          <button id="loginbtn" class="btn primary" type="button">Log in</button>
+          <span id="loginmsg" class="hint"></span>
+        </div>
+        <div class="row gap"><button id="authbtn" class="btn link" type="button">Log in to change settings</button></div>
+        <details><summary>Recent alerts</summary><ul id="alertlog" class="log"></ul></details>
+      </section>
+    </div>
+
+    <p class="foot" id="foot"></p>
+    <p class="foot"><a href="/legacy/">Previous layout</a></p>
+  </main>
+</div>
+
+<dialog id="dlg"><form method="dialog"><p id="dlgtext"></p>
+  <div class="row gap"><button class="btn" value="no">Cancel</button><button class="btn primary" value="yes" id="dlgok">Confirm</button></div></form></dialog>
+<div class="toast" id="toast"></div>
+
+<script src="app.js?v=12" type="module"></script>
+<script src="alarms.js?v=12" type="module"></script>
+<script src="controls.js?v=12" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+{
+  "mode": "direct",
+  "wss": "wss://broker.emqx.io:8084/mqtt",
+  "prefix": "YourTopicPrefix"
+}

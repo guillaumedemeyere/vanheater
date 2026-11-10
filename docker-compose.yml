@@ -1,0 +1,33 @@
+services:
+  server:
+    build: ./server
+    env_file: .env
+    restart: unless-stopped
+    volumes:
+      - data:/data
+    networks: [default]
+
+  web:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on: [server]
+    ports:
+      - "${WEB_PORT:-8088}:80"
+    volumes:
+      - ./web:/usr/share/nginx/html:ro
+      - ./deploy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    # Traefik (uncomment and attach to your traefik network):
+    # labels:
+    #   - traefik.enable=true
+    #   - traefik.http.routers.dieselheater.rule=Host(`heater.example.com`)
+    #   - traefik.http.routers.dieselheater.entrypoints=websecure
+    #   - traefik.http.routers.dieselheater.tls.certresolver=letsencrypt
+    #   - traefik.http.services.dieselheater.loadbalancer.server.port=80
+    # networks: [default, traefik]
+
+volumes:
+  data:
+
+# networks:
+#   traefik:
+#     external: true

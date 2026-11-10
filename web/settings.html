@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14110f">
+<title>Van Heater &middot; Advanced settings</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="style.css?v=7">
+</head>
+<body data-state="unknown">
+<header><h1>Advanced settings</h1><a class="btn" href="/">&larr; Dashboard</a></header>
+<main>
+  <section class="card" id="needlogin" hidden>
+    <p>Advanced settings need a login. Go back to the dashboard, log in from the Alarms card, then return here.</p>
+  </section>
+
+  <div id="content" hidden>
+    <section class="card">
+      <div class="row"><div class="label">Portal connection</div><span class="pill ok">this website</span></div>
+      <p class="hint">How <b>this website</b> reaches the broker. Changing it does not touch the heater. The new connection is tested first (up to 30 s) and only used if heater data arrives on it; otherwise nothing changes.</p>
+      <form id="pform" class="kv" autocomplete="off">
+        <label>Broker host<input name="host" required></label>
+        <label>Port<input name="port" type="number" min="1" max="65535" required></label>
+        <label class="chk"><input name="tls" type="checkbox"> TLS</label>
+        <label>Topic prefix<input name="prefix" required></label>
+        <label>Username<input name="user"></label>
+        <label>Password<input name="password" type="password" placeholder="unchanged" autocomplete="new-password"></label>
+      </form>
+      <div class="row gap"><button id="psave" class="btn primary" type="button">Test &amp; save</button><span id="pmsg" class="hint"></span></div>
+    </section>
+
+    <section class="card ro">
+      <div class="row"><div class="label">Heater MQTT</div><span class="pill bad">heater &middot; read-only</span></div>
+      <p class="hint">The heater's own connection, as it reports it. Read-only on purpose: changing these would disconnect the heater, and it can then only be fixed on site. The portal's connection above should match them (same broker and prefix).</p>
+      <div id="g-hmqtt" class="kv ro"></div>
+      <div id="mqttcheck" class="hint"></div>
+    </section>
+
+    <section class="card ro"><div class="row"><div class="label">Heater network</div><span class="pill">read-only</span></div><div id="g-net" class="kv ro"></div></section>
+
+    <div class="row gap"><button id="rbtn" class="btn" type="button">Refresh heater settings</button><span id="rmsg" class="hint"></span></div>
+    <p class="hint banner">The sections below show what the heater reports. Editing Frost mode, timers and start settings is not enabled yet: they can start or stop the heater, so they will only be switched on after you give the go-ahead for live testing.</p>
+
+    <section class="card ro"><div class="row"><div class="label">Thermostat</div><span class="pill">read-only</span></div><div id="g-therm" class="kv ro"></div></section>
+    <section class="card ro"><div class="row"><div class="label">Frost mode</div><span class="pill">read-only</span></div><div id="g-frost" class="kv ro"></div></section>
+    <section class="card ro"><div class="row"><div class="label">Start &amp; power</div><span class="pill">read-only</span></div><div id="g-start" class="kv ro"></div></section>
+    <section class="card ro"><div class="row"><div class="label">Timers</div><span class="pill">read-only</span></div><p class="hint">Not loaded yet. The timer protocol is the next piece to add.</p></section>
+  </div>
+</main>
+<dialog id="dlg"><form method="dialog"><p id="dlgtext"></p>
+  <div class="row gap"><button class="btn" value="no">Cancel</button><button class="btn primary" value="yes" id="dlgok">Confirm</button></div></form></dialog>
+<script src="settings.js?v=8" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Van Heater layout mock-ups</title>
+<style>
+:root{--bg:#120a07;--card:#1e110b;--line:#35201a;--text:#f1ece6;--muted:#9a8f85;--ember:#ff6a2b;--temp:#ff7a45;--target:#5aa9e6;--ok:#2e9e5b;--bad:#c0392b;--warn:#f5b301}
+*{box-sizing:border-box} body{margin:0;background:#0b0705;color:var(--text);font:15px/1.4 system-ui,sans-serif;padding:24px}
+h1{font-size:1.2rem;margin:0 0 4px} .sub{color:var(--muted);margin:0 0 20px;font-size:.9rem}
+.wrap{display:flex;gap:28px;flex-wrap:wrap;justify-content:center}
+figure{margin:0;width:360px} figcaption{margin:10px 4px 0;font-size:.85rem;color:var(--muted)} figcaption b{color:var(--text);display:block;font-size:.95rem}
+.phone{width:360px;height:720px;background:var(--bg);border:2px solid #3a2a22;border-radius:30px;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.bar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px 6px;font-size:.8rem;color:var(--muted)}
+.pill{font-size:.7rem;padding:3px 9px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--muted)}
+.pill.ok{color:var(--ok)} .pill.on{background:var(--bad);border-color:var(--bad);color:#fff} .pill.ember{background:var(--ember);border-color:var(--ember);color:#fff;font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.lbl{font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.val{font-size:1.25rem;font-weight:600;font-variant-numeric:tabular-nums}
+.body{padding:8px 14px;display:flex;flex-direction:column;gap:10px;flex:1;overflow:hidden}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px} .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;padding:10px 14px;font:inherit;font-size:.85rem}
+.btn.p{background:var(--ember);border-color:var(--ember);color:#fff;font-weight:600}
+.nav{display:flex;justify-content:space-around;border-top:1px solid var(--line);background:var(--card);padding:8px 0 14px;font-size:.7rem;color:var(--muted)}
+.nav div{text-align:center} .nav .a{color:var(--ember)} .nav i{display:block;font-style:normal;font-size:1.2rem}
+.small{font-size:.75rem;color:var(--muted)}
+svg text{fill:var(--muted);font-size:10px}
+</style></head><body>
+<h1>Van Heater &mdash; layout mock-ups</h1>
+<p class="sub">Static mock-ups with sample data (cabin 19.7 &deg;C, target 14 &deg;C, dog mode armed, limits 10&ndash;30 &deg;C). Not part of the live site. All use the current Ember theme.</p>
+<div class="wrap">
+
+<!-- A: GAUGE -->
+<figure><div class="phone">
+ <div class="bar"><b style="color:var(--text)">Van Heater</b><span><span class="pill ok">live</span> <span class="pill">&#9881;</span></span></div>
+ <div class="body">
+  <div style="text-align:center;position:relative">
+   <svg viewBox="0 0 300 200" width="100%"><path d="M30 170 A120 120 0 1 1 270 170" fill="none" stroke="#35201a" stroke-width="16" stroke-linecap="round"/>
+    <path d="M30 170 A120 120 0 0 1 176 52" fill="none" stroke="var(--ember)" stroke-width="16" stroke-linecap="round"/>
+    <circle cx="136" cy="55" r="7" fill="var(--target)"/><text x="40" y="195">8&deg;</text><text x="245" y="195">35&deg;</text></svg>
+   <div style="position:absolute;inset:60px 0 auto;"><div style="font-size:3.4rem;font-weight:700;line-height:1">19.7<small style="font-size:1.1rem;color:var(--muted)">&deg;C</small></div>
+   <div class="small">target <b style="color:var(--target)">14&deg;</b></div><div style="margin-top:6px"><span class="pill ember">Running</span></div></div>
+  </div>
+  <div class="grid3"><div class="card"><div class="lbl">Battery</div><div class="val">13.4<small class="small"> V</small></div></div>
+   <div class="card"><div class="lbl">Pump</div><div class="val">1.9<small class="small"> Hz</small></div></div>
+   <div class="card"><div class="lbl">Humidity</div><div class="val">19<small class="small"> %</small></div></div></div>
+  <div class="card"><div class="row small" style="display:flex;justify-content:space-between"><span class="lbl">Last 4 h</span><span>1h &middot; <b style="color:var(--ember)">4h</b> &middot; Day &middot; Week</span></div>
+   <svg viewBox="0 0 300 70" width="100%"><path d="M0 30 C40 28 80 34 120 31 S200 26 300 29" fill="none" stroke="var(--temp)" stroke-width="2.5"/><path d="M0 52 L300 52" stroke="var(--target)" stroke-width="2" stroke-dasharray="5 4"/></svg></div>
+  <div style="display:flex;gap:10px;justify-content:center;align-items:center"><button class="btn" style="width:48px;height:48px;border-radius:50%">&minus;</button><button class="btn p" style="flex:1">Start / Stop</button><button class="btn" style="width:48px;height:48px;border-radius:50%">+</button></div>
+ </div>
+ <div class="nav"><div class="a"><i>&#9679;</i>Now</div><div><i>&#9684;</i>History</div><div><i>&#128276;</i>Alarms</div><div><i>&#9881;</i>Settings</div></div>
+</div><figcaption><b>A &middot; Thermostat gauge</b>Dial with a target marker, like a physical thermostat. Friendly and glanceable; the controls sit under the dial. Bottom tabs split the pages.</figcaption></figure>
+
+<!-- B: COCKPIT -->
+<figure><div class="phone">
+ <div class="bar"><b style="color:var(--text)">Van Heater</b><span><span class="pill on">ARMED</span> <span class="pill ok">live</span></span></div>
+ <div class="body">
+  <div class="card" style="border-top:3px solid var(--ember);display:flex;align-items:center;justify-content:space-between">
+   <div><div class="lbl">Cabin</div><div style="font-size:3rem;font-weight:700;line-height:1">19.7<small style="font-size:1rem;color:var(--muted)">&deg;C</small></div><div class="small">target 14&deg; &middot; <span class="pill ember">Running</span></div></div>
+   <svg viewBox="0 0 110 70" width="120"><path d="M0 35 C20 33 40 40 60 36 S90 30 110 33" fill="none" stroke="var(--temp)" stroke-width="2.5"/><path d="M0 60 L110 60" stroke="var(--target)" stroke-dasharray="4 3" stroke-width="2"/></svg></div>
+  <div class="grid3">
+   <div class="card"><div class="lbl">Battery</div><div class="val">13.4 V</div></div><div class="card"><div class="lbl">Body</div><div class="val">203&deg;</div></div><div class="card"><div class="lbl">Fan</div><div class="val">2060</div></div>
+   <div class="card"><div class="lbl">Pump</div><div class="val">1.9 Hz</div><div class="small">0.15 L/h</div></div><div class="card"><div class="lbl">Humidity</div><div class="val">19 %</div></div><div class="card"><div class="lbl">Error</div><div class="val" style="font-size:.9rem;color:var(--ok)">E-00 OK</div></div>
+   <div class="card" style="grid-column:span 3"><div class="lbl">Fuel</div><div class="val" style="font-size:1rem">Used 5.20 L &nbsp;&middot;&nbsp; Total 39.8 L</div></div></div>
+  <div class="card"><div class="lbl">Alarms</div><div class="small">Hot &gt; 30&deg; &middot; Cold &lt; 10&deg; &middot; Battery &lt; 11.8 V &middot; 0 active</div></div>
+  <div style="flex:1"></div>
+ </div>
+ <div style="border-top:1px solid var(--line);background:var(--card);padding:10px 14px 16px;display:flex;gap:8px;align-items:center">
+  <button class="btn" style="width:42px;height:42px;border-radius:50%">&minus;</button><div style="text-align:center;min-width:64px"><b style="font-size:1.3rem">14&deg;</b><div class="small">target</div></div><button class="btn" style="width:42px;height:42px;border-radius:50%">+</button>
+  <span style="flex:1"></span><button class="btn p">Start</button><button class="btn">Stop</button></div>
+</div><figcaption><b>B &middot; Cockpit</b>Everything on one screen, dense, with a docked control bar at the bottom so setpoint and start/stop are always under the thumb. Best for quick checks; history moves to a separate page.</figcaption></figure>
+
+<!-- C: DOG-FIRST -->
+<figure><div class="phone">
+ <div class="bar"><b style="color:var(--text)">Van Heater</b><span><span class="pill ok">live</span> <span class="pill">&#9881;</span></span></div>
+ <div class="body">
+  <div class="card" style="border-top:3px solid var(--ok)">
+   <div style="display:flex;justify-content:space-between;align-items:center"><span class="lbl">Dog mode</span><span class="pill on">ARMED</span></div>
+   <div style="font-size:2.6rem;font-weight:700;line-height:1.1;margin-top:6px">All OK</div>
+   <div class="small">Cabin 19.7&deg;C &middot; heater data 4 s ago &middot; battery 13.4 V</div>
+   <div style="margin-top:12px;position:relative;height:34px">
+    <div style="position:absolute;top:12px;left:0;right:0;height:10px;border-radius:6px;background:linear-gradient(90deg,var(--bad) 0 10%,var(--warn) 10% 20%,var(--ok) 20% 80%,var(--warn) 80% 90%,var(--bad) 90%)"></div>
+    <div style="position:absolute;top:4px;left:48%;width:4px;height:26px;background:#fff;border-radius:2px"></div></div>
+   <div class="small" style="display:flex;justify-content:space-between"><span>10&deg; cold alarm</span><span>30&deg; hot alarm</span></div></div>
+  <div class="card"><div style="display:flex;justify-content:space-between"><span class="lbl">Cabin &middot; last 4 h</span><span class="small">1h &middot; <b style="color:var(--ember)">4h</b> &middot; Day &middot; Week</span></div>
+   <svg viewBox="0 0 300 80" width="100%"><rect x="0" y="12" width="300" height="52" fill="rgba(46,158,91,.10)"/><path d="M0 38 C40 36 80 42 120 39 S200 34 300 37" fill="none" stroke="var(--temp)" stroke-width="2.5"/></svg></div>
+  <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="lbl">Heater</div><div class="val" style="font-size:1rem">Running &middot; target 14&deg;</div></div><button class="btn">Details &#9662;</button></div></div>
+  <div style="display:flex;gap:8px"><button class="btn" style="flex:1">Silence alarms 1 h</button><button class="btn" style="flex:1">Disarm</button></div>
+ </div>
+ <div class="nav"><div class="a"><i>&#128021;</i>Dog</div><div><i>&#128293;</i>Heater</div><div><i>&#9684;</i>History</div><div><i>&#9881;</i>Settings</div></div>
+</div><figcaption><b>C &middot; Dog-first</b>Built around the alarm: a big safe/alarm status, the cabin temperature on a bar between your two limits, and heater detail demoted to its own tab. Turns red with a full-screen state when something is wrong.</figcaption></figure>
+
+<!-- D: HISTORY HERO -->
+<figure><div class="phone">
+ <div class="bar"><b style="color:var(--text)">Van Heater</b><span><span class="pill ok">live</span> <span class="pill on">ARMED</span></span></div>
+ <div class="body" style="gap:8px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;padding:0 4px"><div><div class="lbl">Cabin now</div><div style="font-size:2.6rem;font-weight:700;line-height:1">19.7&deg;</div></div><div style="text-align:right" class="small">target 14&deg;<br><span class="pill ember">Running</span></div></div>
+  <div class="seg" style="display:flex;gap:6px"><span class="pill">1h</span><span class="pill ember">4h</span><span class="pill">Day</span><span class="pill">Week</span><span style="flex:1"></span><span class="pill">&#9889; Battery</span><span class="pill">&#127777; Body</span></div>
+  <div class="card" style="padding:8px"><svg viewBox="0 0 320 250" width="100%"><g stroke="#35201a"><path d="M0 40H320M0 100H320M0 160H320M0 220H320"/></g>
+    <rect x="0" y="40" width="320" height="180" fill="rgba(46,158,91,.07)"/><path d="M0 120 C30 118 60 126 90 122 S150 116 190 120 S270 114 320 118" fill="none" stroke="var(--temp)" stroke-width="3"/>
+    <path d="M0 190 L70 190 L90 205 L320 205" fill="none" stroke="var(--target)" stroke-width="2" stroke-dasharray="6 4"/><line x1="200" y1="10" x2="200" y2="235" stroke="#fff" stroke-opacity=".4"/><circle cx="200" cy="119" r="5" fill="var(--temp)"/>
+    <text x="4" y="36">30&deg; hot alarm</text><text x="4" y="236">10&deg; cold alarm</text><text x="206" y="26" style="fill:#fff">19.6&deg; &middot; 08:41</text></svg></div>
+  <div class="grid3"><div class="card"><div class="lbl">Battery</div><div class="val" style="font-size:1rem">13.4 V</div></div><div class="card"><div class="lbl">Pump</div><div class="val" style="font-size:1rem">1.9 Hz</div></div><div class="card"><div class="lbl">Humidity</div><div class="val" style="font-size:1rem">19 %</div></div></div>
+  <div style="display:flex;gap:8px;align-items:center"><button class="btn" style="width:42px;height:42px;border-radius:50%">&minus;</button><b style="font-size:1.2rem;min-width:54px;text-align:center">14&deg;</b><button class="btn" style="width:42px;height:42px;border-radius:50%">+</button><span style="flex:1"></span><button class="btn p">Start</button><button class="btn">Stop</button></div>
+ </div>
+ <div class="nav"><div class="a"><i>&#9684;</i>Overview</div><div><i>&#128276;</i>Alarms</div><div><i>&#128293;</i>Controls</div><div><i>&#9881;</i>Settings</div></div>
+</div><figcaption><b>D &middot; History-first</b>The chart is the hero: touch to read values at any time, with your alarm limits drawn as bands and the target step visible. Good for understanding how the van heats and cools.</figcaption></figure>
+
+</div></body></html>

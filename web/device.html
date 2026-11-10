@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Device check</title>
+<style>
+  body { margin: 0; padding: 12px; background: #fff; color: #000; font: 18px/1.35 sans-serif; }
+  h1 { font-size: 22px; margin: 0 0 8px; }
+  h2 { font-size: 18px; margin: 18px 0 6px; border-bottom: 2px solid #000; }
+  table { border-collapse: collapse; width: 100%; }
+  td { border-bottom: 1px solid #000; padding: 4px 2px; vertical-align: top; }
+  td:first-child { width: 48%; }
+  .ruler { height: 28px; border: 2px solid #000; margin: 6px 0; position: relative; }
+  .ruler b { position: absolute; top: 3px; left: 4px; font-size: 14px; }
+  .bar { height: 14px; background: #000; margin: 6px 0; }
+  .ok { font-weight: bold; } .no { font-weight: bold; text-decoration: line-through; }
+  p { margin: 6px 0; }
+</style>
+</head>
+<body>
+<h1>Device check</h1>
+<p>Open this page on the Kobo and tell me what it shows (a photo works). Nothing is sent anywhere.</p>
+
+<h2>Screen and viewport</h2>
+<table id="t1"></table>
+
+<h2>Physical size check</h2>
+<p>The bar below is 5 cm wide in CSS units. Hold a ruler to the screen and note how wide it really is. Real width / 5 cm = the scale factor.</p>
+<div class="bar" style="width:5cm"></div>
+<p>The bar below is 300 CSS pixels wide.</p>
+<div class="bar" style="width:300px"></div>
+<p style="font-size:16px">This line is 16 CSS px text. Is it readable?</p>
+
+<h2>Browser features</h2>
+<table id="t2"></table>
+
+<script>
+(function () {
+  function row(t, k, v) { var tr = document.createElement('tr'); tr.innerHTML = '<td>' + k + '</td><td>' + v + '</td>'; document.getElementById(t).appendChild(tr); }
+  function yes(b) { return b ? '<span class="ok">yes</span>' : '<span class="no">NO</span>'; }
+  var vv = window.visualViewport;
+  row('t1', 'window.innerWidth x innerHeight', window.innerWidth + ' x ' + window.innerHeight);
+  row('t1', 'screen.width x height', screen.width + ' x ' + screen.height);
+  row('t1', 'devicePixelRatio', window.devicePixelRatio);
+  row('t1', 'visualViewport scale', vv ? vv.scale : 'n/a');
+  row('t1', 'document width (clientWidth)', document.documentElement.clientWidth);
+  row('t1', 'orientation', (window.innerWidth > window.innerHeight) ? 'landscape' : 'portrait');
+  row('t1', 'user agent', navigator.userAgent);
+
+  function css(s) { try { return !!(window.CSS && CSS.supports && CSS.supports(s)); } catch (e) { return false; } }
+  function js(src) { try { new Function(src); return true; } catch (e) { return false; } }
+  row('t2', 'ES modules (script type=module)', yes('noModule' in document.createElement('script')));
+  row('t2', 'fetch()', yes(!!window.fetch));
+  row('t2', 'EventSource (live updates)', yes(!!window.EventSource));
+  row('t2', 'Promise / async functions', yes(!!window.Promise && js('async function f(){}')));
+  row('t2', 'arrow functions / template strings', yes(js('var a=()=>`x`')));
+  row('t2', 'optional chaining ?. and ??', yes(js('var a={};a?.b ?? 1')));
+  row('t2', 'top-level await', yes(js('return 1') && 'noModule' in document.createElement('script')));
+  row('t2', 'CSS variables', yes(css('(--a: 0)') || css('color: var(--a)')));
+  row('t2', 'CSS grid', yes(css('display: grid')));
+  row('t2', 'flexbox gap', yes(css('gap: 1px')));
+  row('t2', 'clamp()', yes(css('width: clamp(1px, 2px, 3px)')));
+  row('t2', 'color-mix()', yes(css('color: color-mix(in srgb, red, blue)')));
+  row('t2', ':has() selector', yes(css('selector(:has(a))')));
+  row('t2', '&lt;dialog&gt; element', yes(typeof HTMLDialogElement === 'function'));
+  row('t2', 'SVG', yes(!!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect));
+  row('t2', 'localStorage', yes((function () { try { localStorage.setItem('t', '1'); return true; } catch (e) { return false; } })()));
+})();
+</script>
+</body>
+</html>
